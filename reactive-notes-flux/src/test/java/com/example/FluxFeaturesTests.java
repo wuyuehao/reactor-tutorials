@@ -56,6 +56,21 @@ public class FluxFeaturesTests {
 		// Logs the subscription, an unbounded request, all elements and finally
 		// completion.
 	}
+	
+	@Test
+	public void subscribeOn() throws Exception {
+		this.flux
+			.log()
+			.map(String::toUpperCase)
+			.doOnComplete(()->System.out.println("onComplete()"))
+			.doOnNext(r->System.out.println(String.format("doOnNext(%s)", r)))
+			.doOnSubscribe(r->System.out.println(String.format("doOnSubscribe(%s)", r)))
+			.subscribe();
+		// Logs the subscription, an unbounded request, all elements and finally
+		// completion.
+	}
+	
+	
 
 	@Test
 	public void consume() throws Exception {
@@ -98,6 +113,8 @@ public class FluxFeaturesTests {
 		// Logs the subscription, requests 2 at a time, all elements and
 		// completion.
 	}
+	
+	
 
 	@Test
 	public void batching() throws Exception {
