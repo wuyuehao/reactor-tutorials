@@ -133,23 +133,39 @@ public class FluxFeaturesTests {
 
 	@Test
 	public void concurrent() throws Exception {
+		
 		Scheduler scheduler = Schedulers.parallel();
-		this.flux.log().flatMap(value -> Mono.just(value.toUpperCase()).subscribeOn(scheduler), 2).subscribe(value -> {
-			log.info("Consumed: " + value);
-		});
-		// Logs the subscription, requests 2 at a time, all elements and finally
-		// completion.
+		
+		this.flux
+			.log()
+			.flatMap(value -> { 
+					return Mono.just(value.toUpperCase())
+							.subscribeOn(scheduler);
+				}, 2)
+			.subscribe(value -> {
+					log.info("Consumed: " + value);
+				}
+			);
+		
+		// Logs the subscription, requests 2 at a time, all elements and finally completion.
 		Thread.sleep(500L);
+		
 	}
 
 	@Test
 	public void publish() throws Exception {
-		this.flux.log().map(String::toUpperCase).subscribeOn(Schedulers.newParallel("sub"))
-				.publishOn(Schedulers.newParallel("pub"), 2).subscribe(value -> {
+		
+		this.flux.log()
+			.map(String::toUpperCase)
+			.subscribeOn(Schedulers.newParallel("sub"))
+			.publishOn(Schedulers.newParallel("pub"), 2)
+			.subscribe(value -> {
 					log.info("Consumed: " + value);
 				});
+		
 		// Logs the consumed messages in a separate thread.
 		Thread.sleep(500L);
+		
 	}
 
 }
