@@ -60,7 +60,7 @@ public class Part02Mono {
 
 	// TODO Return a Mono that contains a "foo" value
 	Mono<String> fooMono() {
-		return Mono.fromSupplier(()->"foo");
+		return Mono.just("foo");
 	}
 
 //========================================================================================
